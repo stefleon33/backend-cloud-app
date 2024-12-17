@@ -15,24 +15,19 @@ const {
 
 const fs = require('fs');
 const fileUpload = require('express-fileupload');
+const path = require('path');
 const port = 3000;
 
-// LocalStack S3 configuration
+// AWS S3 client configuration
 const s3Client = new S3Client({
-    region: 'us-east-1',
-    endpoint: 'http://localhost:4566',
-    forcePathStyle: true,
+    region: process.env.AWS_REGION || 'us-east-1', 
 });
 
-// Bucket name
-const BUCKET_NAME = 'my-cool-local-bucket';
-
-
+// Bucket name 
+const BUCKET_NAME = process.env.BUCKET_NAME || 'achievement-two'; 
 
 // Middleware for handling file uploads
 app.use(fileUpload());
-
-const path = require('path');
 
 // Ensure the uploads directory exists
 const uploadDir = path.join(__dirname, 'uploads');
@@ -46,28 +41,32 @@ app.get('/list-objects', (req, res) => {
     const listObjectsParams = {
         Bucket: BUCKET_NAME
     };
-   s3Client.send(new ListObjectsV2Command(listObjectsParams)).then(
-    (listObjectsResponse) => {
-      res.send(listObjectsResponse);
-    }
-  );
+
+    s3Client.send(new ListObjectsV2Command(listObjectsParams)).then(
+        (listObjectsResponse) => {
+            res.send(listObjectsResponse);
+        }
+    ).catch((err) => {
+        res.status(500).send('Error listing objects: ' + err.message);
+    });
 });
 
 // Endpoint to upload an object to the S3 bucket
 app.post('/upload', (req, res) => {
-  console.log(req.files);  // Log the file object to check its structure
+    const file = req.files.image;  // Get the uploaded file from the request
+    const fileName = req.files.image.name;
 
-  const file = req.files.image;  // Get the uploaded file from the request
-  const fileName = req.files.image.name;
-  const tempPath = `/tmp/${fileName}`;
-  file.mv(tempPath, (err) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error: " + err);
-    } else {
-      res.json(updateimage);
-    }
-  });
+    const uploadParams = {
+        Bucket: BUCKET_NAME,
+        Key: fileName, // Using the file name as the S3 key
+        Body: file.data // Use the file data to upload
+    };
+
+    s3Client.send(new PutObjectCommand(uploadParams)).then(() => {
+        res.json({ message: 'File uploaded successfully!' });
+    }).catch((err) => {
+        res.status(500).send('Error uploading file: ' + err.message);
+    });
 });
 
 // Endpoint to retrieve an object from the S3 bucket
