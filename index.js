@@ -53,19 +53,25 @@ app.get('/list-objects', (req, res) => {
 
 // Endpoint to upload an object to the S3 bucket
 app.post('/upload', (req, res) => {
-    const file = req.files.image;  // Get the uploaded file from the request
-    const fileName = req.files.image.name;
+  console.log(req.files);  // Log the file object to check its structure
 
-    const uploadParams = {
-        Bucket: BUCKET_NAME,
-        Key: fileName, // Using the file name as the S3 key
-        Body: file.data // Use the file data to upload
-    };
+  const file = req.files.image;  // Get the uploaded file from the request
+  const fileName = req.files.image.name;
+  
+  const uploadParams = {
+    Bucket: BUCKET_NAME,
+    Key: fileName, // This will be the key for the uploaded file in S3
+    Body: file.data, // Upload the file content
+    ACL: 'public-read' // Make the file publicly accessible
+  };
 
-    s3Client.send(new PutObjectCommand(uploadParams)).then(() => {
-        res.json({ message: 'File uploaded successfully!' });
-    }).catch((err) => {
-        res.status(500).send('Error uploading file: ' + err.message);
+  s3Client.send(new PutObjectCommand(uploadParams))
+    .then(() => {
+      res.json({ message: 'File uploaded successfully!' });
+    })
+    .catch((error) => {
+      console.error('Error uploading file:', error);
+      res.status(500).send('Error uploading file');
     });
 });
 
