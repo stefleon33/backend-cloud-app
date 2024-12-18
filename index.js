@@ -68,7 +68,7 @@ app.post('/upload', (req, res) => {
   
   const uploadParams = {
     Bucket: BUCKET_NAME,
-    Key: fileName, // This will be the key for the uploaded file in S3
+    Key: `uploads/${fileName}`, // This will be the key for the uploaded file in S3
     Body: file.data, // Upload the file content
   };
 
