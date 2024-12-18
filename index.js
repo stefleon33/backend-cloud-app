@@ -70,6 +70,7 @@ app.post('/upload', (req, res) => {
     Bucket: BUCKET_NAME,
     Key: `uploads/${fileName}`, // This will be the key for the uploaded file in S3
     Body: file.data, // Upload the file content
+    ContentType: file.mimetype,
   };
 
   s3Client.send(new PutObjectCommand(uploadParams))
@@ -88,7 +89,7 @@ app.get('/download/:filename', async (req, res) => {
 
     const downloadParams = {
         Bucket: BUCKET_NAME,
-        Key: filename
+        Key: `uploads/${filename}`
     };
 
     try {
