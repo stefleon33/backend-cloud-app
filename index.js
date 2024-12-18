@@ -6,7 +6,7 @@ const cors = require('cors');
 
 // Allow requests only from the frontend domain
 const corsOptions = {
-    origin: ["http://184.73.251.143", "http://184.73.251.143:4000"],
+    origin: ["http://184.73.251.143", "http://184.73.251.143:3000"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
 };
@@ -24,7 +24,7 @@ const {
 const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const path = require('path');
-const port = 4000;
+const port = 3000;
 
 // AWS S3 client configuration
 const s3Client = new S3Client({
