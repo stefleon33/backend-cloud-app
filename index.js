@@ -70,7 +70,6 @@ app.post('/upload', (req, res) => {
     Bucket: BUCKET_NAME,
     Key: fileName, // This will be the key for the uploaded file in S3
     Body: file.data, // Upload the file content
-    ACL: 'public-read' // Make the file publicly accessible
   };
 
   s3Client.send(new PutObjectCommand(uploadParams))
