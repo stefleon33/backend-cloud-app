@@ -4,13 +4,7 @@ const express = require('express'),
   app = express()
 const cors = require('cors');
 
-// Allow requests only from the frontend domain
-const corsOptions = {
-    origin: ["http://184.73.251.143", "http://184.73.251.143:3000"],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
-};
-app.use(cors(corsOptions));
+app.use(cors());
 
 
 
