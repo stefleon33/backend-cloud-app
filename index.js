@@ -50,13 +50,14 @@ app.get('/list-objects', (req, res) => {
         Bucket: BUCKET_NAME
     };
 
-    s3Client.send(new ListObjectsV2Command(listObjectsParams)).then(
-        (listObjectsResponse) => {
-            res.send(listObjectsResponse);
-        }
-    ).catch((err) => {
-        res.status(500).send('Error listing objects: ' + err.message);
-    });
+    s3Client.send(new ListObjectsV2Command(listObjectsParams))
+        .then((listObjectsResponse) => {
+            // Send only the contents (the files) of the response
+            res.json(listObjectsResponse.Contents); 
+        })
+        .catch((err) => {
+            res.status(500).send('Error listing objects: ' + err.message);
+        });
 });
 
 // Endpoint to upload an object to the S3 bucket
