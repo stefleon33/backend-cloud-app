@@ -41,13 +41,14 @@ if (!fs.existsSync(uploadDir)) {
 // Endpoint to list all objects in the S3 bucket
 app.get('/list-objects', (req, res) => {
     const listObjectsParams = {
-        Bucket: BUCKET_NAME
+        Bucket: BUCKET_NAME,
+        Prefix: 'uploads/',
     };
 
-    s3Client.send(new ListObjectsV2Command(listObjectsParams))
-        .then((listObjectsResponse) => {
-            // Send only the contents (the files) of the response
-            res.json({ objects: listObjectsResponse.Contents }); 
+    s3Client.send(new ListObjectsV2Command(listObjectsParams)).then(
+        (listObjectsResponse) => {
+            // Send only the contents of the uploads folder
+            res.send(listObjectsResponse);
         })
         .catch((err) => {
             res.status(500).send('Error listing objects: ' + err.message);
