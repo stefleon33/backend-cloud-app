@@ -25,7 +25,7 @@ const {
 const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const path = require('path');
-const port = 3000;
+const port = 4000;
 
 // AWS S3 client configuration
 const s3Client = new S3Client({
@@ -103,6 +103,6 @@ app.get('/download/:filename', async (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://0.0.0.0:${port}`);
 });
