@@ -66,7 +66,6 @@ app.post('/upload', (req, res) => {
     Bucket: BUCKET_NAME,
     Key: `uploads/${fileName}`, // This will be the key for the uploaded file in S3
     Body: file.data, // Upload the file content
-    ACL: 'public-read',
     ContentType: file.mimetype,
   };
 
