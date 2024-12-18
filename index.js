@@ -47,7 +47,7 @@ app.get('/list-objects', (req, res) => {
     s3Client.send(new ListObjectsV2Command(listObjectsParams))
         .then((listObjectsResponse) => {
             // Send only the contents (the files) of the response
-            res.json(listObjectsResponse.Contents); 
+            res.json({ objects: listObjectsResponse.Contents }); 
         })
         .catch((err) => {
             res.status(500).send('Error listing objects: ' + err.message);
