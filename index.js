@@ -6,11 +6,10 @@ const cors = require('cors');
 
 // Allow requests only from the frontend domain
 const corsOptions = {
-    origin: "http://184.73.251.143", 
+    origin: ["http://184.73.251.143", "http://184.73.251.143:3000"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
 };
-
 app.use(cors(corsOptions));
 
 
@@ -103,6 +102,6 @@ app.get('/download/:filename', async (req, res) => {
 });
 
 // Start the server
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
     console.log(`Server is running on http://0.0.0.0:${port}`);
 });
