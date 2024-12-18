@@ -90,7 +90,13 @@ app.get('/download/:filename', async (req, res) => {
 
     try {
         const data = await s3Client.send(new GetObjectCommand(downloadParams));
-        data.Body.pipe(res); // Stream the object to the response
+
+        // Set the headers for file download
+        res.setHeader('Content-Type', data.ContentType); // Set the content type of the file
+        res.setHeader('Content-Disposition', `attachment; filename=${filename}`); // Force download
+
+        // Stream the object to the response
+        data.Body.pipe(res);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error downloading the file');
